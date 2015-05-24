@@ -6,4 +6,5 @@ file = open(sys.argv[1],'rb')
 
 
 filecontents = file.read()
-midiparser.interpret_midi_data(filecontents)
+a = midiparser.process(filecontents)
+#print(a)
