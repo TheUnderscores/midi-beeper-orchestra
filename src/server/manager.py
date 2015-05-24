@@ -13,6 +13,16 @@ class Layer:
 class Client:
     def __init__(self, connection):
         self.connection = connection
+        self.curHz = 0
+
+    def doEvent(self, event):
+        """
+        Tell client to beep based on event frequency.
+        The client will ONLY recieve the frequency to beep at.
+        """
+        self.curHz = event.hz
+        print("HZ:\t" + str(event.hz))
+        # TODO: Send packet with event.hz as the frequency
 
 class Manager:
     def __init__(self, clients):
@@ -50,22 +60,31 @@ class Manager:
         self.layers.pop(c_i)
         self.updLyrDist()
 
-    def update(dt):
+    def update(self, dt):
         """
         Updates the manage
-        dt is delta-time in milliseconds
+        dt is delta-time in milliseconds (integer, not float)
         """
-        pass
-        # TODO
+        # Decrease delay on events
+        for l_i, l in enumerate(self.layers):
+            decr = dt
+            events = self.layers[l_i].events
+            # Decrease delays of as many events as delta-time encompasses
+            while decr > 0:
+                oldDelay = events[0].delay
+                if decr <= oldDelay:
+                    events[0].delay -= decr
+                else:
+                    events.pop(0)
+                decr -= oldDelay
+
+        # Send events to clients
+        for c_i, c in enumerate(self.clients):
+            event = self.layers[c.layer].events[0]
+            # Only update the client's beeper frequency if it needs changing
+            if c.curHz != self.layers[c.layer].events[0].hz:
+                c.doEvent(event)
 
 
 # TEST
-clients = []
-for c_i in range(10):
-    clients.append(Client('foo'))
-man = Manager(clients)
-for l_i in range(6):
-    man.addLayer()
-for c_i, c in enumerate(man.clients):
-    print(c.layer)
 # EOF TEST
