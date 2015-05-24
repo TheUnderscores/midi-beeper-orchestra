@@ -41,9 +41,9 @@ print("clients: \t{}".format(len(server_manager.clients)))
 
 # TESTING
 notes = {
-    'A4' :440,
-    'B4f':466,
-    'B4' :494,
+    'A5' :440,
+    'B5f':466,
+    'B5' :494,
     'C5' :523,
     'D5f':554,
     'D5' :587,
@@ -52,10 +52,10 @@ notes = {
     'F5' :698,
     'G5f':740,
     'G5' :784,
-    'A5f':831,
-    'A5' :880,
-    'B5f':932,
-    'B5' :988,
+    'A6f':831,
+    'A6' :880,
+    'B6f':932,
+    'B6' :988,
     'C6' :1047,
     'D6f':1109,
     'D6' :1175,
@@ -63,9 +63,9 @@ notes = {
     'F6' :1318,
     'G6f':1480,
     'G6' :1568,
-    'A6f':1661,
-    'A6' :1760,
-    'B6f':1865,
+    'A7f':1661,
+    'A7' :1760,
+    'B7f':1865,
     'C7' :2093
 }
 
@@ -206,7 +206,9 @@ events1 = (
     (tick, notes['B6']),
     (tick/2, notes['D6f']),
     (tick*0.75, notes['B6f']),
-    (tick/4, notes['A6f'])
+    (tick/4, notes['A6f']),
+    (tick*0.75, notes['G5f'])
+    #(tick/4, 
 )
 for e in events1:
     server_manager.addToLayer(0, manager.Event(*e))
