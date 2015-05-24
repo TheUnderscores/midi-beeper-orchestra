@@ -14,6 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Add ./.. to the module search path
+import sys
+sys.path.append("..")
+
+import common.network
+
 class Event:
     def __init__(self, delay, hz):
         self.delay = delay
@@ -24,12 +30,9 @@ class Layer:
         self.events = []
         self.curEvent = Event(0, 0)
 
-    def addEvent(self, e):
-        self.events.append(e)
-
-class Client:
-    def __init__(self, connection):
-        self.connection = connection
+class Client():
+    def __init__(self, host=None):
+        self.host = host
         self.curHz = 0
 
     def doEvent(self, event):
@@ -38,8 +41,7 @@ class Client:
         The client will ONLY recieve the frequency to beep at.
         """
         self.curHz = event.hz
-        print("HZ: \t{}\tLAYER: \t{}".format(event.hz, self.layer))
-        # TODO: Send packet with self.curHz as the frequency
+        common.network.send("freq", self.curHz, self.host)
 
 class Manager:
     def __init__(self, clients):
@@ -64,7 +66,7 @@ class Manager:
             # No use assigning layers
             # Set all client frequencies to 0
             for c in self.clients:
-                c.curHz = 0
+                c.layer = 0
             return False
 
         if len(self.clients) <= self.numActiveLayers:
@@ -111,7 +113,7 @@ class Manager:
         self.layers.append(layer)
         self.layers_active.append(None)
         self._checkLayerActive(len(self.layers)-1)
-        self.layer_done.append(False)
+        self.layers_done.append(False)
 
     def rmvLayer(self, l_i):
         """Removes layer l_i from manager's layer stack"""
@@ -191,10 +193,7 @@ class Manager:
                     self._popFromLayer(l_i)
                 decr -= oldDelay
 
-        if not self._updateLayerDistribution():
-            # No layers are active
-            # Nothing to do
-            return
+        self._updateLayerDistribution()
 
         # Send events to clients
         for c_i, c in enumerate(self.clients):
