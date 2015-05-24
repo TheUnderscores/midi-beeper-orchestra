@@ -6,6 +6,7 @@ class Event:
 class Layer:
     def __init__(self):
         self.events = []
+        self.curEvent = Event(0, 0)
 
     def addEvent(self, e):
         self.events.append(e)
@@ -62,7 +63,7 @@ class Manager:
 
     def addToLayer(self, l_i, event):
         """Adds given event to layer of specified index l_i"""
-        self.layers[l_i].append(event)
+        self.layers[l_i].events.append(event)
 
     def update(self, dt):
         """
@@ -76,38 +77,40 @@ class Manager:
             # Decrease delays of as many events as delta-time encompasses
             while decr > 0:
                 oldDelay = events[0].delay
-                if decr <= oldDelay:
+                if decr < oldDelay:
                     events[0].delay -= decr
                 else:
+                    self.layers[l_i].curEvent = events[0]
                     events.pop(0)
                 decr -= oldDelay
 
         # Send events to clients
         for c_i, c in enumerate(self.clients):
-            event = self.layers[c.layer].events[0]
+            curEvent = self.layers[c.layer].curEvent
             # Only update the client's beeper frequency if it needs changing
-            if c.curHz != self.layers[c.layer].events[0].hz:
-                c.doEvent(event)
+            if c.curHz != curEvent.hz:
+                c.doEvent(curEvent)
 
 
 # TEST
 clients = []
-for c_i in range(10):
-    clients.append(Client('foo'))
+for c_i in range(2):
+    clients.append(Client("<PUT CONNECTION HERE>"))
 man = Manager(clients)
 for l_i in range(2):
     man.addLayer()
 
-events = ((128, 10), (128, 0), (128, 10))
+events = ((0, 1), (64, 3), (256, 6), (64, 7))
 for e in events:
-    man.layers[0].addEvent(Event(*e))
-events = ((64, 30), (256, 0), (64, 30))
+    man.addToLayer(0, Event(*e))
+events = ((0, 2), (128, 4), (128, 5), (128, 8))
 for e in events:
-    man.layers[1].addEvent(Event(*e))
+    man.addToLayer(1, Event(*e))
 
 from time import sleep
-for i in range(6):
-    sleep(0.064)
-    man.update(64)
-# Expected output: 30, 10, 0, 0, 10, 30
+man.update(0)
+for i in range(24):
+    sleep(0.5)
+    man.update(16)
+# Expected output: 1, 1, 30, 10, 0, 0, 10, 30
 # EOF TEST
