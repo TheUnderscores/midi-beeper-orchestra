@@ -1,6 +1,7 @@
 import struct
 import binascii
 import convert
+import manager
 
 def parse_var_int(data,offset):
     nums = []
@@ -102,7 +103,10 @@ def interpret_midi_data(data):
                     note_on = nibble==0x09
                     if(note_on and velocity == 0):
                         note_on = False
-                    track.append([note_on,delta_time,convert.hzToMIDI(key)])
+                    bla = 2
+                    if note_on:
+                        bla = 1
+                    track.append([bla,delta_time,convert.hzToMIDI(key)])
                 else:
                     print("bad things happened. Possibly corrupt midi file")
                 lasttype = typebyte
@@ -110,29 +114,87 @@ def interpret_midi_data(data):
 
 def process(data):
     tracks = interpret_midi_data(data)
+    layers_notes = [0,0,0,0,0,0]
+    layers_timing =[0,0,0,0,0,0]
+    layers = [manager.Layer(),
+              manager.Layer(),
+              manager.Layer(),
+              manager.Layer(),
+              manager.Layer(),
+              manager.Layer()]
+    notes_playing = {}
+    normalized_tracks = []
     points = {}
     #pos = 0
     for track in tracks:
         pos = 0
         for event in track:
            pos+=event[1]
-           if event[0] != 0:
+           if event[0] > 0:
                points.setdefault(pos,[]).append(event)
            else:
                print(event)
     s = sorted(points.items(),key=lambda x: x[0])
+    '''for i,time_events in enumerate(s):
+        time,events = time_events
+        for event in events:
+            if event[0] == 1:
+                #Check if the note ends within timespan, if not add a notestop.
+                incr = 1
+                print("checking if note has an end")
+                while True:
+                    print("loopiter")
+                    btime,bevents = s[i+incr]
+                    goout = False
+                    for bevent in bevents:
+                        if bevent[0] == 2 and bevent[2] == event[2]:
+                            goout = True
+                            print("it has an end")
+                            break
+                    if goout:
+                        break
+                    if btime > (time + 500): #it has been too long.
+                        s.setdefault(time+500,[].append([2,0,bevent[2]]))
+                        break'''
+    for time,events in s:
+        for event in events:
+            #first find a layer that isn't busy
+            if event[0] == 1:
+                layer_to_use = -1
+                for i in range(6):
+                    if layers_notes[i] == 0: layer_to_use = i
+                if layer_to_use == -1:
+                    print("WARNING: wasn't able to alocate space for event")
+                else:
+                    layers[layer_to_use].addEvent(manager.Event(time-layers_timing[layer_to_use],event[2]))
+                    layers_notes[i] = event[2]
+                    layers_timing[layer_to_use] = time
+            elif event[0] == 2:
+                layer_to_use = -1
+                for i in range(6):
+                    if layers_notes [i] == event[2]:
+                        layer_to_use = i
+                layers[layer_to_use].addEvent(manager.Event(time-layers_timing[layer_to_use],0))
+                layers_notes[layer_to_use] = 0
+                layers_timing[layer_to_use] = time
+
+    print(s)
+    print(layers)
+    return layers
+'''
     num_on = 0
     max_on = 0
     print("A")
     for time,evlist in s:
         for ev in evlist:
-            #print(ev)
-            if ev[0]:
+            print(ev)
+            if ev[0] == 1:
                 num_on += 1
             else:
                 num_on -= 1
-                print("GOOD YAAY")
-                exit()
+            print(num_on)
+                #print("GOOD YAAY")
+                #exit()
             if num_on > max_on:
                 max_on = num_on
     print("B")
@@ -141,4 +203,4 @@ def process(data):
 #        print(len(point))
 #        if len(point) > biggest:
 #            biggest = len(point)
-    print(max_on)
+    print(max_on)'''
