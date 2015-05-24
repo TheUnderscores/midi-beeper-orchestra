@@ -110,6 +110,7 @@ def interpret_midi_data(data):
                     hz = 0
                     if key > 0:
                         hz = convert.MIDItoHz(key)
+                        #hz*=4
                     track.append([bla,delta_time,hz])
                 lasttype = typebyte
     return tracks
@@ -166,7 +167,7 @@ def process(data,num_layers):
                 if layer_to_use == -1:
                     print("WARNING: wasn't able to alocate space for event")
                 else:
-                    layers[layer_to_use].addEvent(manager.Event((time-layers_timing[layer_to_use])*1000,event[2]))
+                    layers[layer_to_use].addEvent(manager.Event((time-layers_timing[layer_to_use])*500,event[2]))
                     layers_notes[i] = event[2]
                     layers_timing[layer_to_use] = time
             elif event[0] == 2:
@@ -174,7 +175,7 @@ def process(data,num_layers):
                 for i in range(len(layers_notes)):
                     if layers_notes [i] == event[2]:
                         layer_to_use = i
-                layers[layer_to_use].addEvent(manager.Event((time-layers_timing[layer_to_use])*1000,0))
+                layers[layer_to_use].addEvent(manager.Event((time-layers_timing[layer_to_use])*500,0))
                 layers_notes[layer_to_use] = 0
                 layers_timing[layer_to_use] = time
 
