@@ -49,14 +49,14 @@ class Manager:
         # Connected clients
         self.clients = clients
 
-    def _updLyrDist(self):
+    def _updateLayerDistribution(self):
         """
         Updates layer distribution.
         In other words, which client is playing which channel.
         Return True if there are active layers
         Return False if there are no active layers
         """
-        self._updActLyrNum()
+        self._updateNumberOfActiveLayers()
 
         if self.numActiveLayers == 0:
             # No layers are active
@@ -66,7 +66,7 @@ class Manager:
                 c.curHz = 0
             return False
 
-        if len(self.clients) <= self.numActiveLayers: # FIX THIS
+        if len(self.clients) <= self.numActiveLayers:
             # Lack of client. More layers than clients.
             c_i = 0
             for l_i in range(len(self.layers)):
@@ -141,12 +141,12 @@ class Manager:
 
         return active
 
-    def _updActLyrNum(self):
+    def _updateNumberOfActiveLayers(self):
         """Update number of active layers"""
         self.numActiveLayers = 0
         for l_i, active in enumerate(self.layers_active):
             if active:
-                self.numActiveLayers += 1 # YOU WHERE HERE
+                self.numActiveLayers += 1
 
     def addToLayer(self, l_i, event):
         """Adds given event to layer of specified index l_i"""
@@ -180,7 +180,7 @@ class Manager:
                     self._popFromLayer(l_i)
                 decr -= oldDelay
 
-        if not self._updLyrDist():
+        if not self._updateLayerDistribution():
             # No layers are active
             # Nothing to do
             return
