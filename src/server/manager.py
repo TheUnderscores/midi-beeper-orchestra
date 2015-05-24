@@ -1,6 +1,6 @@
 class Event:
-    def __init__(self, t, hz):
-        self.t = t
+    def __init__(self, delay, hz):
+        self.delay = delay
         self.hz = hz
 
 class Layer:
