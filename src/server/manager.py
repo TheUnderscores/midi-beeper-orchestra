@@ -30,6 +30,9 @@ class Layer:
         self.events = []
         self.curEvent = Event(0, 0)
 
+    def addEvent(self, e):
+        self.event.append(e)
+
 class Client():
     def __init__(self, host=None):
         self.host = host
