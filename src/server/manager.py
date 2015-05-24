@@ -45,6 +45,7 @@ class Manager:
     def __init__(self, clients):
         self.layers = []
         self.layers_active = []
+        self.layers_done = []
         self.numActiveLayers = 0
         # Connected clients
         self.clients = clients
@@ -109,12 +110,14 @@ class Manager:
             layer = Layer()
         self.layers.append(layer)
         self.layers_active.append(None)
-        active = self._checkLayerActive(len(self.layers)-1)
+        self._checkLayerActive(len(self.layers)-1)
+        self.layer_done.append(False)
 
     def rmvLayer(self, l_i):
         """Removes layer l_i from manager's layer stack"""
         self.layers.pop(l_i)
         self.layers_active.pop(l_i)
+        self.layers_done.pop(l_i)
 
     def _popFromLayer(self, l_i):
         """Pops first event in layer l_i if layer is not empty"""
@@ -124,6 +127,8 @@ class Manager:
         if len(events) == 0:
             # Fill layer with a dummy event
             events.append(Event(1024, 0))
+            # We'll assume that this layer is done giving events
+            self.layers_done[l_i] = True
         self._checkLayerActive(l_i)
 
     def _checkLayerActive(self, l_i):
@@ -151,6 +156,12 @@ class Manager:
     def addToLayer(self, l_i, event):
         """Adds given event to layer of specified index l_i"""
         self.layers[l_i].events.append(event)
+
+    def isDone(self):
+        for done in self.layers_done:
+            if done == False:
+                return False
+        return True
 
     def update(self, dt):
         """
