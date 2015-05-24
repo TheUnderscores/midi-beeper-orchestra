@@ -62,6 +62,8 @@ notes = {
     'E6f':1245,
     'F6' :1318,
     'G6f':1480,
+    'G6' :1568,
+    'A6f':1661,
     'A6' :1760,
     'B6f':1865,
     'C7' :2093
@@ -188,6 +190,22 @@ events1 = (
     (tick/4, notes['G5f']),
     (tick/4, notes['A6f']),
     (tick/4, notes['B6']),
+    (tick/4, notes['A6f']),
+    (tick/2, notes['D6f']),
+    (tick/4, 0),
+    (tick*0.75, notes['D6f']),
+    (tick*0.75, notes['B6']),
+    (tick/4, notes['B6f']),
+    (tick/2, notes['A6f']),
+
+    # Never gana run around and
+    (tick/4, notes['G5f']),
+    (tick/4, notes['A6f']),
+    (tick/4, notes['B6']),
+    (tick/4, notes['A6f']),
+    (tick, notes['B6']),
+    (tick/2, notes['D6f']),
+    (tick*0.75, notes['B6f']),
     (tick/4, notes['A6f'])
 )
 for e in events1:
