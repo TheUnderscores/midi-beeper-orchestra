@@ -40,20 +40,158 @@ server_manager = manager.Manager(common.network.getClients())
 print("clients: \t{}".format(len(server_manager.clients)))
 
 # TESTING
-server_manager.addLayer()
-tick = 32 * 1000
-for i in range(100):
-    if i % 2 == 0:
-        server_manager.addToLayer(0, manager.Event(tick, 200+5*i))
-    else:
-        server_manager.addToLayer(0, manager.Event(tick, 0))
+notes = {
+    'A4' :440,
+    'B4f':466,
+    'B4' :494,
+    'C5' :523,
+    'D5f':554,
+    'D5' :587,
+    'E5f':622,
+    'E5' :659,
+    'F5' :698,
+    'G5f':740,
+    'G5' :784,
+    'A5f':831,
+    'A5' :880,
+    'B5f':932,
+    'B5' :988,
+    'C6' :1047,
+    'D6f':1109,
+    'D6' :1175,
+    'E6f':1245,
+    'F6' :1318,
+    'G6f':1480,
+    'A6' :1760,
+    'B6f':1865,
+    'C7' :2093
+}
 
 server_manager.addLayer()
-for i in range(100):
-    if i % 2 == 0:
-        server_manager.addToLayer(1, manager.Event(tick, 700-5*i))
-    else:
-        server_manager.addToLayer(1, manager.Event(tick, 0))
+# Quarter note length
+tick = 512
+events1 = (
+    # Wait a little before starting
+    (tick, 0),
+
+    # VERSE #1
+
+    # There are no strangers to love
+    (tick/2, notes['A6f']),
+    (tick/2, notes['B6f']),
+    (tick/4, notes['B6']),
+    (tick/4, 0),
+    (tick/2, notes['B6']),
+    (tick/2, notes['D6f']),
+    (tick*0.75, notes['B6f']),
+    (tick/4, notes['A6f']),
+    (tick*1.5, notes['G5f']),
+
+    (tick*2.5, 0),
+
+    # You know the rules, and so do I
+    (tick/4, notes['A6f']),
+    (tick/4, 0),
+    (tick/2, notes['A6f']),
+    (tick/2, notes['B6f']),
+    (tick/2, notes['B6']),
+    (tick/4, notes['A6f']),
+    (tick*0.75, 0),
+    (tick/4, notes['G5f']),
+    (tick/4, 0),
+    (tick/2, notes['G6f']),
+    (tick/2, 0),
+    (tick/2, notes['G6f']),
+    (tick/2, 0),
+    (tick*1.5, notes['D6f']),
+
+    (tick*1.5, 0),
+
+    # Something something something... thinking of
+    (tick/4, notes['A6f']),
+    (tick/4, 0),
+    (tick/2, notes['A6f']),
+    (tick/2, notes['B6f']),
+    (tick/2, notes['B6']),
+    (tick/2, notes['A6f']),
+    (tick/2, notes['B6f']),
+    (tick/4, notes['D6f']),
+    (tick*0.75, 0),
+    (tick/2, notes['B6f']),
+    (tick/2, notes['A6f']),
+    (tick/4, notes['B6f']),
+    (tick/4, notes['A6f']),
+    (tick, notes['G5f']),
+
+    (tick*1.5, 0),
+
+    # You wouldn't get this from, any other guy
+    (tick/4, notes['A6f']),
+    (tick/4, 0),
+    (tick/2, notes['A6f']),
+    (tick/2, notes['B6f']),
+    (tick/2, notes['B6']),
+    (tick/2, notes['A6f']),
+    (tick, notes['G5f']),
+    (tick/4, notes['D6f']),
+    (tick/4, 0),
+    (tick/4, notes['D6f']),
+    (tick/4, 0),
+    (tick/2, notes['D6f']),
+    (tick/2, notes['E6f']),
+    (tick, notes['D6f']),
+
+    (tick, 0),
+
+    # I just wanna tell you how I'm feeling
+    (tick*2.5, notes['B6']),
+    (tick/2, notes['D6f']),
+    (tick/2, notes['E6']),
+    (tick*0.75, notes['D6f']),
+    (tick/4, 0),
+    (tick/4, notes['D6f']),
+    (tick/4, 0),
+    (tick/2, notes['D6f']),
+    (tick/2, notes['E6f']),
+    (tick/2, notes['D6f']),
+    (tick/4, notes['G5f']),
+    (tick/4, 0),
+    (tick, notes['G5f']),
+
+    (tick*1.5, 0),
+
+    # I wanna make you understand
+    (tick/2, notes['G5f']),
+    (tick/2, notes['A6f']),
+    (tick/2, notes['B6f']),
+    (tick/2, notes['B6']),
+    (tick, notes['A6']),
+    (tick/2, notes['D6f']),
+    (tick/2, notes['E6f']),
+    (tick, notes['D6f']),
+
+    (tick/2, 0)
+    
+    # CHORUS
+
+    # Never ganna give you up
+    (tick/4, notes['G5f']),
+    (tick/4, notes['A6f']),
+    (tick/4, notes['B6']),
+    (tick/4, notes['A6f']),
+    (tick/2, notes['E6f']),
+    (tick/4, 0),
+    (tick*0.75, notes['E6f']),
+    (tick*1.5, notes['D6f']),
+
+    # Never ganna let you down
+    (tick/4, notes['G5f']),
+    (tick/4, notes['A6f']),
+    (tick/4, notes['B6']),
+    (tick/4, notes['A6f'])
+)
+for e in events1:
+    server_manager.addToLayer(0, manager.Event(*e))
 # EOF TESTING
 
 # Start server main loop
