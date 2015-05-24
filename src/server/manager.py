@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# TODO: Account for empty layer
-
 class Event:
     def __init__(self, delay, hz):
         self.delay = delay
@@ -118,6 +116,16 @@ class Manager:
         self.layers.pop(l_i)
         self.layers_active.pop(l_i)
 
+    def _popFromLayer(self, l_i):
+        """Pops first event in layer l_i if layer is not empty"""
+        events = self.layers[l_i].events
+        self.layers[l_i].curEvent = events[0]
+        events.pop(0)
+        if len(events) == 0:
+            # Fill layer with a dummy event
+            events.append(Event(1024, 0))
+        self._checkLayerActive(l_i)
+
     def _checkLayerActive(self, l_i):
         """
         Check if layer l_i is frequency is 0 or not.
@@ -146,16 +154,17 @@ class Manager:
 
     def update(self, dt):
         """
-        Updates the manage
-        dt is delta-time in milliseconds (integer, not float)
+        Updates the manager.
+        dt is delta-time in milliseconds (integer, not float).
+        Setting dt to 0 causes function to effectively acts as
+        a primer/initializer.
         """
         if dt == 0:
+            # This effectively acts as a primer
             for l_i, l in enumerate(self.layers):
                 events = self.layers[l_i].events
                 if events[0].delay <= 0:
-                    self.layers[l_i].curEvent = events[0]
-                    events.pop(0)
-                    self._checkLayerActive(l_i)
+                    self._popFromLayer(l_i)
             return
 
         # Decrease delay on events
@@ -168,9 +177,7 @@ class Manager:
                 if decr < oldDelay:
                     events[0].delay -= decr
                 else:
-                    self.layers[l_i].curEvent = events[0]
-                    events.pop(0)
-                    self._checkLayerActive(l_i)
+                    self._popFromLayer(l_i)
                 decr -= oldDelay
 
         if not self._updLyrDist():
@@ -184,37 +191,3 @@ class Manager:
             # Only update the client's beeper frequency if it needs changing
             if c.curHz != curEvent.hz:
                 c.doEvent(curEvent)
-
-
-# TEST
-clients = []
-for c_i in range(5):
-    clients.append(Client("<PUT CONNECTION HERE>"))
-man = Manager(clients)
-for l_i in range(3):
-    man.addLayer()
-
-events = ((0, 1337), (64, 0), (64, 1), (64, 0), (64, 1), (64, 0), (64, 0), (64, 0))
-for e in events:
-    man.addToLayer(0, Event(*e))
-events2 = ((0, 1), (64, 0), (64, 1), (64, 0), (64, 0), (64, 2), (64, 0), (64, 0))
-for e in events2:
-    man.addToLayer(1, Event(*e))
-events3 = ((0, 50), (64, 0), (64, 1), (64, 0), (64, 0), (64, 0), (64, 20), (64, 0))
-for e in events3:
-    man.addToLayer(2, Event(*e))
-
-for l in man.layers:
-    print(l)
-
-from time import sleep
-print("ACTIVE: \t{}".format(man.numActiveLayers))
-man.update(0)
-print("ACTIVE: \t{}".format(man.numActiveLayers))
-for i in range(14):
-    print("ITERATION #{}".format(i))
-    sleep(0.5)
-    man.update(32)
-    print("ACTIVE: \t{}".format(man.numActiveLayers))
-# EXPECTED OUTPUT: 3, 0, 3, 2, 1, 1, 1
-# EOF TEST
