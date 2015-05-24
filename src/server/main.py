@@ -70,17 +70,13 @@ notes = {
     'C7' :2093
 }
 
-server_manager.addLayer()
 # Quarter note length
 tick = 192 * 1000
 events1 = (
-    # Wait a little before starting
-    (tick, 0),
-
     # VERSE #1
 
     # There are no strangers to love
-    (0, notes['A5f']),
+    (tick, notes['A5f']),
     (tick/2, notes['B5f']),
     (tick/2, notes['B5']),
     (tick/4, 0),
@@ -164,7 +160,7 @@ events1 = (
     (tick/2, notes['A5f']),
     (tick/2, notes['B5f']),
     (tick/2, notes['B5']),
-    (tick/2, notes['A6']),
+    (tick/2, notes['A5']),
     (tick, notes['D6f']),
     (tick/2, notes['E6f']),
     (tick/2, notes['D6f']),
@@ -213,8 +209,49 @@ events1 = (
 
     (tick, 0)
 )
+events2 = (
+    # VERSE 1:
+
+    # We are no strangers to love
+    (tick, notes['B4']),
+    (tick*2.5, notes['D5f']),
+
+    (tick*3.5, 0),
+
+     # You know the rules and so do I
+    (tick*2, notes['B4']),
+    (tick*3, notes['D5f']),
+
+    (tick*3, 0),
+
+    # Something something something, thinking of
+    (tick*2, notes['D5f']),
+    (tick*3.5, notes['B4']),
+
+    (tick*3.5, 0),
+
+    # You wouldn't get this from any other guy
+    (tick, notes['D5f']),
+    (tick*3, notes['G5f']),
+
+    (tick*3, 0),
+
+    # I just want to tell you how I'm feeling
+    (tick, notes['D5f']),
+    (tick*3.5, notes['E5f']),
+
+    # I wanna make you understand
+    (tick*4.5, notes['D5f']),
+    (tick*4, notes['E5f']),
+
+    (tick*4, 0)
+)
+server_manager.addLayer()
 for e in events1:
     server_manager.addToLayer(0, manager.Event(*e))
+server_manager.addLayer()
+for e in events2:
+    server_manager.addToLayer(1, manager.Event(*e))
 # EOF TESTING
 
 # Start server main loop
