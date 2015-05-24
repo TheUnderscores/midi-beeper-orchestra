@@ -22,7 +22,7 @@ class Client:
         """
         self.curHz = event.hz
         print("HZ:\t" + str(event.hz))
-        # TODO: Send packet with event.hz as the frequency
+        # TODO: Send packet with self.curHz as the frequency
 
 class Manager:
     def __init__(self, clients):
@@ -60,6 +60,10 @@ class Manager:
         self.layers.pop(c_i)
         self.updLyrDist()
 
+    def addToLayer(self, l_i, event):
+        """Adds given event to layer of specified index l_i"""
+        self.layers[l_i].append(event)
+
     def update(self, dt):
         """
         Updates the manage
@@ -87,4 +91,23 @@ class Manager:
 
 
 # TEST
+clients = []
+for c_i in range(10):
+    clients.append(Client('foo'))
+man = Manager(clients)
+for l_i in range(2):
+    man.addLayer()
+
+events = ((128, 10), (128, 0), (128, 10))
+for e in events:
+    man.layers[0].addEvent(Event(*e))
+events = ((64, 30), (256, 0), (64, 30))
+for e in events:
+    man.layers[1].addEvent(Event(*e))
+
+from time import sleep
+for i in range(6):
+    sleep(0.064)
+    man.update(64)
+# Expected output: 30, 10, 0, 0, 10, 30
 # EOF TEST
