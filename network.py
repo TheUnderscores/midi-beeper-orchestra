@@ -22,11 +22,28 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 def createServer(port):
     sock.bind(('', port))
+    global clientList
+    clientList = []
+    return True
 
 def send(type, value, client):
     sock.sendto(json.dumps({"type": type, "val": value}).encode(), client)
+    return True
 
 def receive():
     data, client = sock.recvfrom(1024)
     return json.loads(data.decode()), client
 
+def addClient(client):
+    global clientList
+    clientList.append(client)
+    return True
+
+def removeClient(client):
+    global clientList
+    clientList.remove(client)
+    return True
+
+def getClients():
+    global clientList
+    return clientList
