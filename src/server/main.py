@@ -41,9 +41,9 @@ print("clients: \t{}".format(len(server_manager.clients)))
 
 # TESTING
 notes = {
-    'A5' :440,
-    'B5f':466,
-    'B5' :494,
+    'A4' :440,
+    'B4f':466,
+    'B4' :494,
     'C5' :523,
     'D5f':554,
     'D5' :587,
@@ -52,20 +52,21 @@ notes = {
     'F5' :698,
     'G5f':740,
     'G5' :784,
-    'A6f':831,
-    'A6' :880,
-    'B6f':932,
-    'B6' :988,
+    'A5f':831,
+    'A5' :880,
+    'B5f':932,
+    'B5' :988,
     'C6' :1047,
     'D6f':1109,
     'D6' :1175,
     'E6f':1245,
-    'F6' :1318,
+    'E6' :1319,
+    'F6' :1397,
     'G6f':1480,
     'G6' :1568,
-    'A7f':1661,
-    'A7' :1760,
-    'B7f':1865,
+    'A6f':1661,
+    'A6' :1760,
+    'B6f':1865,
     'C7' :2093
 }
 
@@ -79,61 +80,57 @@ events1 = (
     # VERSE #1
 
     # There are no strangers to love
-    (tick/2, notes['A6f']),
-    (tick/2, notes['B6f']),
-    (tick/4, notes['B6']),
+    (tick/2, notes['A5f']),
+    (tick/2, notes['B5f']),
+    (tick/4, notes['B5']),
     (tick/4, 0),
-    (tick/2, notes['B6']),
+    (tick/2, notes['B5']),
     (tick/2, notes['D6f']),
-    (tick*0.75, notes['B6f']),
-    (tick/4, notes['A6f']),
+    (tick*0.75, notes['B5f']),
+    (tick/4, notes['A5f']),
     (tick*1.5, notes['G5f']),
 
     (tick*2.5, 0),
 
     # You know the rules, and so do I
-    (tick/4, notes['A6f']),
+    (tick/4, notes['A5f']),
     (tick/4, 0),
-    (tick/2, notes['A6f']),
-    (tick/2, notes['B6f']),
-    (tick/2, notes['B6']),
-    (tick/4, notes['A6f']),
-    (tick*0.75, 0),
-    (tick/4, notes['G5f']),
-    (tick/4, 0),
+    (tick/2, notes['A5f']),
+    (tick/2, notes['B5f']),
+    (tick/2, notes['B5']),
+    (tick, notes['A5f']),
+    (tick/2, notes['G5f']),
     (tick/2, notes['G6f']),
     (tick/2, 0),
     (tick/2, notes['G6f']),
-    (tick/2, 0),
     (tick*1.5, notes['D6f']),
 
     (tick*1.5, 0),
 
     # Something something something... thinking of
-    (tick/4, notes['A6f']),
+    (tick/4, notes['A5f']),
     (tick/4, 0),
-    (tick/2, notes['A6f']),
-    (tick/2, notes['B6f']),
-    (tick/2, notes['B6']),
-    (tick/2, notes['A6f']),
-    (tick/2, notes['B6f']),
-    (tick/4, notes['D6f']),
-    (tick*0.75, 0),
-    (tick/2, notes['B6f']),
-    (tick/2, notes['A6f']),
-    (tick/4, notes['B6f']),
-    (tick/4, notes['A6f']),
+    (tick/2, notes['A5f']),
+    (tick/2, notes['B5f']),
+    (tick/2, notes['B5']),
+    (tick/2, notes['A5f']),
+    (tick/2, notes['B5']),
+    (tick, notes['D6f']),
+    (tick/2, notes['B5f']),
+    (tick/2, notes['A5f']),
+    (tick/4, notes['B5f']),
+    (tick/4, notes['A5f']),
     (tick, notes['G5f']),
 
     (tick*1.5, 0),
 
     # You wouldn't get this from, any other guy
-    (tick/4, notes['A6f']),
+    (tick/4, notes['A5f']),
     (tick/4, 0),
-    (tick/2, notes['A6f']),
-    (tick/2, notes['B6f']),
-    (tick/2, notes['B6']),
-    (tick/2, notes['A6f']),
+    (tick/2, notes['A5f']),
+    (tick/2, notes['B5f']),
+    (tick/2, notes['B5']),
+    (tick/2, notes['A5f']),
     (tick, notes['G5f']),
     (tick/4, notes['D6f']),
     (tick/4, 0),
@@ -146,9 +143,9 @@ events1 = (
     (tick, 0),
 
     # I just wanna tell you how I'm feeling
-    (tick*2.5, notes['B6']),
+    (tick*2.5, notes['B5']),
     (tick/2, notes['D6f']),
-    (tick/2, notes['E6']),
+    (tick/2, notes['E6f']),
     (tick*0.75, notes['D6f']),
     (tick/4, 0),
     (tick/4, notes['D6f']),
@@ -164,23 +161,23 @@ events1 = (
 
     # I wanna make you understand
     (tick/2, notes['G5f']),
-    (tick/2, notes['A6f']),
-    (tick/2, notes['B6f']),
-    (tick/2, notes['B6']),
+    (tick/2, notes['A5f']),
+    (tick/2, notes['B5f']),
+    (tick/2, notes['B5']),
     (tick, notes['A6']),
     (tick/2, notes['D6f']),
     (tick/2, notes['E6f']),
     (tick, notes['D6f']),
 
-    (tick/2, 0)
+    (tick/2, 0),
     
     # CHORUS
 
     # Never ganna give you up
     (tick/4, notes['G5f']),
-    (tick/4, notes['A6f']),
-    (tick/4, notes['B6']),
-    (tick/4, notes['A6f']),
+    (tick/4, notes['A5f']),
+    (tick/4, notes['B5']),
+    (tick/4, notes['A5f']),
     (tick/2, notes['E6f']),
     (tick/4, 0),
     (tick*0.75, notes['E6f']),
@@ -188,27 +185,33 @@ events1 = (
 
     # Never ganna let you down
     (tick/4, notes['G5f']),
-    (tick/4, notes['A6f']),
-    (tick/4, notes['B6']),
-    (tick/4, notes['A6f']),
+    (tick/4, notes['A5f']),
+    (tick/4, notes['B5']),
+    (tick/4, notes['A5f']),
     (tick/2, notes['D6f']),
     (tick/4, 0),
     (tick*0.75, notes['D6f']),
-    (tick*0.75, notes['B6']),
-    (tick/4, notes['B6f']),
-    (tick/2, notes['A6f']),
+    (tick*0.75, notes['B5']),
+    (tick/4, notes['B5f']),
+    (tick/2, notes['A5f']),
 
     # Never gana run around and
     (tick/4, notes['G5f']),
-    (tick/4, notes['A6f']),
-    (tick/4, notes['B6']),
-    (tick/4, notes['A6f']),
-    (tick, notes['B6']),
+    (tick/4, notes['A5f']),
+    (tick/4, notes['B5']),
+    (tick/4, notes['A5f']),
+    (tick, notes['B5']),
     (tick/2, notes['D6f']),
-    (tick*0.75, notes['B6f']),
-    (tick/4, notes['A6f']),
-    (tick*0.75, notes['G5f'])
-    #(tick/4, 
+    (tick*0.75, notes['B5f']),
+    (tick/4, notes['A5f']),
+    (tick*0.75, notes['G5f']),
+    (tick/2, notes['G5f']),
+    (tick/2, notes['D6f']),
+    (tick/4, notes['B5']),
+    (tick/4, 0)
+    (tick, notes['B5']),
+
+    (tick, 0)
 )
 for e in events1:
     server_manager.addToLayer(0, manager.Event(*e))
