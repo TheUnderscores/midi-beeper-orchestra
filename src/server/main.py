@@ -56,7 +56,6 @@ last = datetime.datetime.now()
 iter = 0
 while True:
     first = datetime.datetime.now()
-    #print(int((first - last).microseconds))
     server_manager.update(int((first - last).microseconds))
     last = datetime.datetime.now()
     iter+=1

@@ -41,7 +41,7 @@ class Client():
     def doEvent(self, event):
         """
         Tell client to beep based on event frequency.
-        The client will ONLY recieve the frequency to beep at.
+        The client will ONLY receive the frequency to beep at.
         """
         self.curHz = event.hz
         common.network.send("freq", self.curHz, self.host)
@@ -96,7 +96,6 @@ class Manager:
             if pos < len(self.clients):
                 # Assign leftover clients to different layers, starting
                 # with layers at beginning of stack.
-                #leftOver = len(self.clients) - pos
                 for l_i in range(len(self.layers)):
                     if not self.layers_active[l_i]:
                         continue

@@ -7,30 +7,13 @@ def parse_var_int(data,offset):
     nums = []
     total = 0
     while data[offset] & 0x80:
-        #print(data[offset])
         nums.append(data[offset] % 128)
         offset+=1
-    #print(data[offset])
     nums.append(data[offset] % 127)
     offset+=1
-    #print(nums)
     for num_i, num in enumerate(nums):
         total += num*((2**7)**(len(nums)-(num_i+1)))
-    #print(total)
     return (total,offset)
-'''    delta_time = 0
-    length = 1
-    while (struct.unpack("@B",data[offset+length-1:offset+length])[0] & 0x80) > 0:
-        #print("data[offset:offset+length] is {}\n{}\nOffset:{} Length:{}".format(data[offset:offset+length+1],binascii.hexlify(data),offset,length))
-        length+=1
-    for i in range(length):
-        offset+=1
-        inc = 0
-        for char in data[0:offset+1]:
-            delta_time += (char%128) << (7*inc)
-            inc+=1
-        offset+=1
-    return (delta_time,offset)'''
 
 def interpret_midi_data(data):
     """
@@ -44,21 +27,18 @@ def interpret_midi_data(data):
         offset+=4
         chunklength = struct.unpack(">L", data[offset:offset+4])[0]
         offset+=4
-        #print("Chunktype {}, length {}".format(chunktype,chunklength))
         chunk = data[offset:offset+chunklength]
         chunks.append([chunktype,chunk])
         offset+=chunklength
     #Read header
     header = chunks.pop(0)
     chunkdata = header[1]
-    #print(len(header[1]))
     midi_format = struct.unpack(">H", chunkdata[0:2])
     num_tracks = struct.unpack(">H", chunkdata[2:4])
     division = struct.unpack(">H", chunkdata[4:6])
     tracks = []
     #Everything else
     for chunk in chunks:
-        #print(chunk[0])
         if chunk[0] == b"MTrk":
             track = []
             tracks.append(track)
@@ -69,11 +49,9 @@ def interpret_midi_data(data):
                 delta_time,offset = parse_var_int(chunk[1],offset)
                 typebyte = chunk[1][offset]
                 offset+=1
-                #print("Typebyte {},offset {}".format(typebyte, offset))
                 #running status bullshit
                 if not (typebyte & 0x80):
                     typebyte = lasttype
-                    #print("CONTINUE:YES")
                     offset-=1
                 nibble = typebyte >> 4
                 if typebyte == 0xF0 or typebyte == 0xF7:
@@ -110,7 +88,6 @@ def interpret_midi_data(data):
                     hz = 0
                     if key > 0:
                         hz = convert.MIDItoHz(key)
-                        #hz*=4
                     track.append([bla,delta_time,hz])
                 lasttype = typebyte
     return tracks
@@ -127,7 +104,6 @@ def process(data,num_layers):
     notes_playing = {}
     normalized_tracks = []
     points = {}
-    #pos = 0
     for track in tracks:
         pos = 0
         for event in track:
@@ -136,27 +112,6 @@ def process(data,num_layers):
                points.setdefault(pos,[]).append(event)
     
     s = sorted(points.items(),key=lambda x:x[0])
-    '''for i,time_events in enumerate(s):
-        time,events = time_events
-        for event in events:
-            if event[0] == 1:
-                #Check if the note ends within timespan, if not add a notestop.
-                incr = 1
-                print("checking if note has an end")
-                while True:
-                    print("loopiter")
-                    btime,bevents = s[i+incr]
-                    goout = False
-                    for bevent in bevents:
-                        if bevent[0] == 2 and bevent[2] == event[2]:
-                            goout = True
-                            print("it has an end")
-                            break
-                    if goout:
-                        break
-                    if btime > (time + 500): #it has been too long.
-                        s.setdefault(time+500,[].append([2,0,bevent[2]]))
-                        break'''
     for time,events in s:
         for event in events:
             #first find a layer that isn't busy
@@ -179,29 +134,4 @@ def process(data,num_layers):
                 layers_notes[layer_to_use] = 0
                 layers_timing[layer_to_use] = time
 
-    #print(s)
-    #print(layers)
     return layers
-'''
-    num_on = 0
-    max_on = 0
-    print("A")
-    for time,evlist in s:
-        for ev in evlist:
-            print(ev)
-            if ev[0] == 1:
-                num_on += 1
-            else:
-                num_on -= 1
-            print(num_on)
-                #print("GOOD YAAY")
-                #exit()
-            if num_on > max_on:
-                max_on = num_on
-    print("B")
-#    biggest = 0
-#    for pos,point in points.items():
-#        print(len(point))
-#        if len(point) > biggest:
-#            biggest = len(point)
-    print(max_on)'''
