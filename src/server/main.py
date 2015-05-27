@@ -22,6 +22,7 @@ sys.path.append("..")
 
 import common.network
 import manager
+import midiparser
 
 if not common.network.createServer(12002):
     print("ACK! Could not create server socket!")
@@ -39,22 +40,12 @@ while len(common.network.getClients()) < total_clients:
 server_manager = manager.Manager(common.network.getClients())
 print("clients: \t{}".format(len(server_manager.clients)))
 
-# TESTING
-server_manager.addLayer()
-tick = 32 * 1000
-for i in range(100):
-    if i % 2 == 0:
-        server_manager.addToLayer(0, manager.Event(tick, 200+5*i))
-    else:
-        server_manager.addToLayer(0, manager.Event(tick, 0))
-
-server_manager.addLayer()
-for i in range(100):
-    if i % 2 == 0:
-        server_manager.addToLayer(1, manager.Event(tick, 700-5*i))
-    else:
-        server_manager.addToLayer(1, manager.Event(tick, 0))
-# EOF TESTING
+##################################
+midi_file = sys.argv[2]
+layers = midiparser.process(open(midi_file,'rb').read(),total_clients)
+for layer in layers:
+    if len(layer.events) !=0:
+        server_manager.addLayer(layer=layer)
 
 # Start server main loop
 
@@ -65,7 +56,6 @@ last = datetime.datetime.now()
 iter = 0
 while True:
     first = datetime.datetime.now()
-    #print(int((first - last).microseconds))
     server_manager.update(int((first - last).microseconds))
     last = datetime.datetime.now()
     iter+=1
