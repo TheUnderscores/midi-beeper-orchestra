@@ -17,7 +17,7 @@ def MIDItoHz(MIDIval):
     """
     Converts a MIDI note, MIDIval, value to the equivalent hertz value
     """
-    return 69 + 12 * math.log((MIDIval/440), 2)
+    return (2**((MIDIval-69)/12))*440
 
 def hzToMIDI(hz):
     """
