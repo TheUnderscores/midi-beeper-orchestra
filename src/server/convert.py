@@ -23,5 +23,5 @@ def hzToMIDI(hz):
     """
     Converts hertz, hz, to MIDI note equivalent
     """
-    midi = 2**((hz-69)/12) * 440
+    midi = math.log((hz/440),2)*12+69
     return int(midi + 0.5)
