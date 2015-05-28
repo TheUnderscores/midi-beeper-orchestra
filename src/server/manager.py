@@ -180,20 +180,20 @@ class Manager:
                 events = self.layers[l_i].events
                 if events[0].delay <= 0:
                     self._popFromLayer(l_i)
-            return
 
-        # Decrease delay on events
-        for l_i, l in enumerate(self.layers):
-            decr = dt
-            events = self.layers[l_i].events
-            # Decrease delays of as many events as delta-time encompasses
-            while decr > 0:
-                oldDelay = events[0].delay
-                if decr < oldDelay:
-                    events[0].delay -= decr
-                else:
-                    self._popFromLayer(l_i)
-                decr -= oldDelay
+        else:
+            # Decrease delay on events
+            for l_i, l in enumerate(self.layers):
+                decr = dt
+                events = self.layers[l_i].events
+                # Decrease delays of as many events as delta-time encompasses
+                while decr > 0:
+                    oldDelay = events[0].delay
+                    if decr < oldDelay:
+                        events[0].delay -= decr
+                    else:
+                        self._popFromLayer(l_i)
+                        decr -= oldDelay
 
         self._updateLayerDistribution()
 
