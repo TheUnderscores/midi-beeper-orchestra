@@ -118,9 +118,11 @@ def process(data,num_layers):
             if event[0] == 1:
                 layer_to_use = -1
                 for i in range(len(layers_notes)):
-                    if layers_notes[i] == 0: layer_to_use = i
+                    if layers_notes[i] == 0:
+                        layer_to_use = i
+                        break
                 if layer_to_use == -1:
-                    print("WARNING: wasn't able to alocate space for event")
+                    print("WARNING: wasn't able to allocate space for event")
                 else:
                     layers[layer_to_use].addEvent(manager.Event((time-layers_timing[layer_to_use])*500,event[2]))
                     layers_notes[i] = event[2]
